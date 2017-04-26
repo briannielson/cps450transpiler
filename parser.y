@@ -14,7 +14,7 @@ void yyerror(const char *s);
 ofstream outfile;
 %}
 
-%union 
+%union
 {
    int ival;
    char *sval;
@@ -42,66 +42,113 @@ ofstream outfile;
 program:  INT_KEYWORD MAIN_KEYWORD '(' ')' '{' Declarations Statements '}' { outfile << "Program encountered" << endl; }
 	 ;
 
-Declarations:  
-	     | Declarations Declaration  
+Declarations:
+	     | Declarations Declaration
 	     ;
 
 Declaration:  Type IDENTIFIER ';'  { outfile << "Id=" << $2 << endl;}
 	      | Type IDENTIFIER '[' INT ']' ';' { outfile << "Id=" << $2 << endl ;
 					      outfile << "Size=" << $4   << endl;}
-	      ;  
+	      ;
 
-Type: INT_KEYWORD { outfile << "Int declaration encountered" << endl; } 
+Type: INT_KEYWORD { outfile << "Int declaration encountered" << endl; }
       | BOOL { outfile << "Boolean declaration encountered" << endl;}
 	;
 
-Statements:  
+Statements:
 	    | Statements statement
 	    ;
 
-statement:   
+statement:
 	    Assignment
 	    | ';'
 	    ;
 
-Assignment: IDENTIFIER '=' Expression ';' { outfile << "Assignment operation encountered" << endl; } 
+Assignment: IDENTIFIER '=' Expression ';' { outfile << "Assignment operation encountered" << endl; }
 	    | IDENTIFIER '[' Expression ']' '=' Expression ';' { outfile << "Assignment operation encountered" << endl; }
 	    ;
-		
+
 Expression: Term Third
 	    ;
-Third:  
+Third:
 	| Third '+' Term {  outfile << "Addition expression encountered" << endl; }
-	| Third '-' Term  {  outfile << "Subtraction expression encountered" << endl; } 
+	| Third '-' Term  {  outfile << "Subtraction expression encountered" << endl; }
 	;
 
 Term: Factor Second
 	;
 
-Second: 
-	| Second '*' Factor {outfile << "Multiplication expression encountered" << endl; }  
-	| Second '/' Factor {outfile << "Division expression encountered" << endl; }  
-	| Second '%' Factor  {outfile << "Modulus expression encountered" << endl; }	
-	; 
+Second:
+	| Second '*' Factor {outfile << "Multiplication expression encountered" << endl; }
+	| Second '/' Factor {outfile << "Division expression encountered" << endl; }
+	| Second '%' Factor  {outfile << "Modulus expression encountered" << endl; }
+	;
 
 
 
 Factor:  IDENTIFIER '[' Expression ']'
 	| IDENTIFIER
-	| Literal 
+	| Literal
 	| '(' Expression ')'
 	;
 
 Literal: INT { outfile << "Integer literal encountered" << endl;
-		outfile << "Value=" << $1 << endl; } 
+		outfile << "Value=" << $1 << endl; }
 	| Boolean
 	;
 Boolean: TRUE { outfile << "Boolean literal encountered" << endl;
-		outfile << "Value=true" << endl; } 
+		outfile << "Value=true" << endl; }
 	| FALSE { outfile << "Boolean literal encountered" << endl;
-		outfile << "Value=false" << endl; }  
+		outfile << "Value=false" << endl; }
 	;
-%%
+
+//my code
+
+If statement:  if(Expression) statement[else statement]
+  ;
+
+While statement: while (Expression) statement
+  ;
+
+conjunction: Equality {&& Equality }
+	;
+
+Equality: Relation [EquOp Relation]
+	;
+
+
+
+
+EquOp:
+	;
+
+
+
+
+relation: Addition [RelOp Addition]
+  ;
+
+Addition: Term {AddOp Term}
+	;
+
+UnaryOp:
+  ;
+
+Primary: Identifier [[Expression]]
+  | Literal
+  | (Expression)
+  | Type (Expression)
+  ;
+
+float: Integer. Integer
+	;
+
+Char: 
+	;
+
+
+
+  %%
 
 
 
@@ -115,11 +162,11 @@ int main(int, char**) {
 		return -1;
 	}
 	// output file bison_output.txt
-	outfile.open("bison_output.txt"); 
+	outfile.open("bison_output.txt");
 
 	// set flex to read from it instead of defaulting to STDIN:
 	yyin = myfile;
-	
+
 	// parse through the input until there is no more:
 	do {
 		yyparse();
@@ -127,11 +174,11 @@ int main(int, char**) {
 
 	// close output file
 	outfile.close();
-	cout << "Successful parse" << endl;	
+	cout << "Successful parse" << endl;
 }
 
 void yyerror(const char *s) {
-	// Some Invalid syntax 
+	// Some Invalid syntax
 	cout << "Invalid Program" << endl;
 	exit(-1);
 }
