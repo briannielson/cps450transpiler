@@ -9,4 +9,77 @@ Lex: Open bracket {
 Lex: Keyword:  int
 type: int
 Lex: Identifier:  int0
-Lex: Integer:  5
+Lex: Semicolon ;
+identifier: int0
+Lex: Keyword:  int
+type: int
+Lex: Identifier:  int1
+Lex: Semicolon ;
+identifier: int1
+Lex: Keyword:  float
+type: float
+Lex: Identifier:  flt0
+Lex: Semicolon ;
+identifier: flt0
+Lex: Identifier:  int0
+Found Declaration...
+Found Declaration...
+Found Declaration...
+Lex: AssignmentOp =
+Lex: Integer:  6
+Integer found: 6
+Lex: Semicolon ;
+identifier: int0
+Assignment found
+Lex: Identifier:  int1
+Lex: AssignmentOp =
+Lex: Integer:  42
+Integer found: 42
+Lex: Semicolon ;
+identifier: int1
+Assignment found
+Lex: Identifier:  flt0
+Lex: AssignmentOp =
+Lex: Float:  5.3
+Float found: 5.300000
+Lex: Semicolon ;
+identifier: flt0
+Assignment found
+Lex: Keyword:  if
+Lex: Open paranthesis (
+Lex: Identifier:  int0
+Lex: Comparison:  <=
+Identifier int0
+Lex: Identifier:  int1
+Lex: Close paranthesis )
+Identifier int1
+Relation
+Lex: Open bracket {
+Lex: Inline comment:  // inline comment 2
+
+Lex: Identifier:  flt0
+Lex: AssignmentOp =
+Lex: Identifier:  flt0
+Lex: Operator:  +
+Identifier flt0
+Lex: Identifier:  int1
+Lex: Semicolon ;
+Identifier int1
+Adding terms
+identifier: flt0
+Assignment found
+Lex: Inline comment:  // inline comment 3 == not comparison
+
+Lex: Close bracket }
+No more statements...
+found statement block
+Code block found
+Lex: Close bracket }
+If statement
+If statement found
+No more statements...
+found statement block
+found statement block
+found statement block
+found statement block
+Found program

@@ -62,7 +62,7 @@ void print(char *s, char *q);
 
 [A-Za-z_][A-Za-z_0-9]*  {
 		print("Identifier: ", yytext);
-		yylval.sval = yytext;
+		yylval.sval = strdup(yytext);
 		return IDENTIFIER;
 	}
 
@@ -72,7 +72,7 @@ void print(char *s, char *q);
 ")" { print("Close paranthesis", yytext); return yytext[0]; }
 "{" { print("Open bracket", yytext); return yytext[0]; }
 "}" { print("Close bracket", yytext); return yytext[0]; }
-";" { print("Semicolon", yytext); return yytext[0]; }
+";" { print("Semicolon", yytext); return EOL; }
 "="	{ print("AssignmentOp", yytext); return yytext[0]; }
 
 [*|/|%|+|-|!] { printop(); return yytext[0]; }

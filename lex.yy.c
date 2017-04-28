@@ -908,13 +908,12 @@ YY_RULE_SETUP
 { 
 			  print("Integer: ", yytext); 
 			  yylval.ival = atoi(yytext);
-			  fprintf(stderr, "Integer: %d", yylval.ival);
 			  return INTEGER;
 			}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 51 "tran.l"
+#line 50 "tran.l"
 {
 			  print("Float: ", yytext); 
 			  yylval.fval = atof(yytext);
@@ -924,7 +923,7 @@ YY_RULE_SETUP
 case 21:
 /* rule 21 can match eol */
 YY_RULE_SETUP
-#line 58 "tran.l"
+#line 57 "tran.l"
 { //'
 			  print("Character: ", yytext); 
 			  yylval.cval = yytext[0];
@@ -933,70 +932,70 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 64 "tran.l"
+#line 63 "tran.l"
 {
 		print("Identifier: ", yytext);
-		yylval.sval = yytext;
+		yylval.sval = strdup(yytext);
 		return IDENTIFIER;
 	}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 70 "tran.l"
+#line 69 "tran.l"
 { printcmp(); return yytext[0]; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 72 "tran.l"
+#line 71 "tran.l"
 { print("Open paranthesis", yytext); return yytext[0]; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 73 "tran.l"
+#line 72 "tran.l"
 { print("Close paranthesis", yytext); return yytext[0]; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 74 "tran.l"
+#line 73 "tran.l"
 { print("Open bracket", yytext); return yytext[0]; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 75 "tran.l"
+#line 74 "tran.l"
 { print("Close bracket", yytext); return yytext[0]; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 76 "tran.l"
-{ print("Semicolon", yytext); return yytext[0]; }
+#line 75 "tran.l"
+{ print("Semicolon", yytext); return EOL; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 77 "tran.l"
+#line 76 "tran.l"
 { print("AssignmentOp", yytext); return yytext[0]; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 79 "tran.l"
+#line 78 "tran.l"
 { printop(); return yytext[0]; }
 	YY_BREAK
 case 31:
 /* rule 31 can match eol */
 YY_RULE_SETUP
-#line 81 "tran.l"
+#line 80 "tran.l"
 { }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 82 "tran.l"
+#line 81 "tran.l"
 { invalid = 1; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 83 "tran.l"
+#line 82 "tran.l"
 ECHO;
 	YY_BREAK
-#line 1000 "lex.yy.c"
+#line 999 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1997,7 +1996,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 83 "tran.l"
+#line 82 "tran.l"
 
 
 

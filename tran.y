@@ -13,11 +13,13 @@ extern int yyparse();
 extern FILE *yyin;
 %}
 
+%define parse.error verbose
+
 %left '+' '-'
 %left '*' '/' '%'
 %left CMP_EQUAL CMP_NOTEQUAL CMP_GREQ CMP_LTEQ '>' '<'
 
-%token RESV_WHILE RESV_TRUE RESV_FALSE RESV_MAIN
+%token RESV_IF RESV_WHILE RESV_TRUE RESV_FALSE RESV_MAIN
 %token TYPE_BOOL TYPE_CHAR TYPE_FLOAT TYPE_INT
 %token LOG_AND LOG_OR CMP_EQUAL CMP_NOTEQUAL CMP_GREQ CMP_LTEQ '>' '<'
 
@@ -34,18 +36,20 @@ extern FILE *yyin;
 %token <cval> CHAR
 %token <fval> FLOAT
 
+%nonassoc EOL
 %nonassoc RESV_ELSE
-%nonassoc RESV_IF
 
 %%
 
-Program  	: TYPE_INT RESV_MAIN '(' ')' '{' Declarations Statements '}' { dprintf(outfile, "Found program\n"); }
+Program  	: TYPE_INT RESV_MAIN '(' ')' '{' Declarations Statements '}' { dprintf(outfile, "Found program\n"); exit(0); }
 
-Declarations: Declaration Declarations { dprintf(outfile, "Found Declarations...\n"); }
+Declarations: Declaration Declarations { dprintf(outfile, "Found Declaration...\n"); }
 			| ;
 
-Declaration: Type IDENTIFIER ';' { dprintf(outfile, "identifier: %s\n", $2); }
-			| Type IDENTIFIER '[' INTEGER ']' ';' { dprintf(outfile, "identifier: %s, size: %d\n", $2, $4); }
+Declaration: Type IDENTIFIER EOL { dprintf(outfile, "identifier: %s\n", $2); }
+			| Type IDENTIFIER '[' INTEGER ']' EOL { dprintf(outfile, "identifier: %s\n", $2); }
+			| Type IDENTIFIER ',' Declaration { dprintf(outfile, "identifier and declaration: %s\n", $2); }
+			| Type IDENTIFIER '[' INTEGER ']' ',' Declaration { dprintf(outfile, "identifier and declaration: %s\n", $2); }
 
 Type  		: TYPE_BOOL { dprintf(outfile, "type: boolean\n"); }
 			| TYPE_CHAR { dprintf(outfile, "type: character\n"); }
@@ -55,7 +59,7 @@ Type  		: TYPE_BOOL { dprintf(outfile, "type: boolean\n"); }
 Statements 	: Statement Statements { dprintf(outfile, "found statement block\n"); }
 			| { dprintf(outfile, "No more statements...\n"); }
 
-Statement 	: ';' { dprintf(outfile, "End of line (;)\n"); }
+Statement 	: EOL { dprintf(outfile, "End of line (;)\n"); }
 			| Block { dprintf(outfile, "Code block found\n"); }
 			| Assignment { dprintf(outfile, "Assignment found\n"); }
 			| Ifstate { dprintf(outfile, "If statement found\n"); }
@@ -63,8 +67,8 @@ Statement 	: ';' { dprintf(outfile, "End of line (;)\n"); }
 
 Block		: '{' Statements '}' {}
 
-Assignment	: IDENTIFIER '=' Expression ';' { dprintf(outfile, "identifier: %s\n", $1); }
-			| IDENTIFIER '[' Expression ']' '=' Expression ';' { 
+Assignment	: IDENTIFIER '=' Expression EOL { dprintf(outfile, "identifier: %s\n", $1); }
+			| IDENTIFIER '[' Expression ']' '=' Expression EOL { 
 				dprintf(outfile, "identifier: %s\n", $1); 
 			}
 
@@ -104,7 +108,8 @@ Factor		: Primary {}
 
 UnaryOp		: '-' | '!' {}
 
-Primary 	: IDENTIFIER '[' Expression ']' { dprintf(outfile, "Array %s\n", $1); }
+Primary 	: IDENTIFIER { dprintf(outfile, "Identifier %s\n", $1); }
+			| IDENTIFIER '[' Expression ']' { dprintf(outfile, "Array %s\n", $1); }
 			| Literal
 			| '(' Expression ')' { dprintf(outfile, "EXTREME RECURSION (primary --> Expression)\n"); }
 			| Type '(' Expression ')' { dprintf(outfile, "Casting\n"); }
