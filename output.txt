@@ -7,5 +7,6 @@ Lex: Open paranthesis (
 Lex: Close paranthesis )
 Lex: Open bracket {
 Lex: Keyword:  int
-type: intLex: Identifier:  int0
-Lex: AssignmentOp =
+type: int
+Lex: Identifier:  int0
+Lex: Integer:  5

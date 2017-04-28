@@ -28,7 +28,6 @@ void print(char *s, char *q);
 "if"		{ printkey(); return RESV_IF;	 }
 "else"		{ printkey(); return RESV_ELSE;	 }
 "while"		{ printkey(); return RESV_WHILE; }
-"return"	{ printkey(); return RESV_RET;	 }
 "main"		{ printkey(); return RESV_MAIN;	 }
 
 "&&" { printop(); return LOG_AND; }
@@ -92,16 +91,10 @@ void comment()
 	char c1, c2;
 
 	loop:
-		while ((c1 = input()) != '*' && c1 != 0)
-			putchar(c1);
+		while ((c1 = input()) != '*' && c1 != 0);
 
-		if ((c2 = input()) != '/' && c1 != 0) {
-			unput(c2);
+		if ((c2 = input()) != '/' && c1 != 0)
 			goto loop;
-		}
-
-		if (c1 != 0)
-			putchar(c2);
 }
 
 int yywrap(void)
