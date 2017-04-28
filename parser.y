@@ -1,184 +1,74 @@
 %{
-#include <cstdio>
-#include <iostream>
-#include <fstream>
-
-using namespace std;
-
-extern "C" int yylex();
-extern "C" int yyparse();
-extern "C" FILE *yyin;
-
-
-void yyerror(const char *s);
-ofstream outfile;
+#include <stdio.h>
 %}
 
-%union
-{
-   int ival;
-   char *sval;
-}
 %left '+' '-'
 %left '*' '/' '%'
+%left CMP_EQUAL CMP_NOTEQUAL CMP_GREQ CMP_LTEQ '>' '<'
 
-
-%token DIGIT
-%token INT_KEYWORD
-%token MAIN_KEYWORD
-%token BOOL
-%token TRUE
-%token FALSE
-
-
-%token <ival> INT
-%token <sval> IDENTIFIER
-
-
+%token CHAR FLOAT INTEGER BOOLEAN IDENTIFIER
+%token RESV_IF RESV_ELSE RESV_WHILE RESV_RET RESV_TRUE RESV_FALSE
+%token TYPE_BOOL TYPE_CHAR TYPE_FLOAT TYPE_INT
+%token LOG_AND LOG_OR CMP_EQUAL CMP_NOTEQUAL CMP_GREQ CMP_LTEQ '>' '<'
 
 %%
 
+Program  	: TYPE_INT "main" '(' ')' '{' Declarations Statements '}' {};
+Declarations: Declaration Declarations {}
+			| ;
+Declaration: Type IDENTIFIER {} ';'
+			| Type IDENTIFIER '[' INTEGER ']' ';' {};
+Type  		: TYPE_BOOL {}
+			| TYPE_CHAR {}
+			| TYPE_FLOAT {}
+			| TYPE_INT {};
+Statements 	: Statement Statements {}
+			| ;
+Statement 	: ';' {}
+			| Block {}
+			| Assignment {}
+			| Ifstate {}
+			| Whilestate {};
+Block		: '{' Statements '}' {};
+Assignment	: IDENTIFIER '=' Expression ';' {}
+			| IDENTIFIER '[' Expression ']' '=' Expression ';' {};
+Ifstate		: RESV_IF '(' Expression ')' Statement {}
+			| RESV_IF '(' Expression ')' Statement RESV_ELSE Statement {};
+Whilestate	: RESV_WHILE '(' Expression ')' Statement {};
+Expression	: Conjunction {}
+			| Conjunction LOG_OR Conjunction {};
+Conjunction : Equality {}
+			| Equality LOG_AND Equality {};
+Equality	: Relation {}
+			| Relation EquOp Relation {};
+EquOp		: CMP_EQUAL | CMP_NOTEQUAL;
+Relation	: Addition {}
+			| Addition RelOp Addition {};
+RelOp		: '<' | CMP_LTEQ | CMP_GREQ | '>';
+Addition	: Term {}
+			| Term AddOp Term {};
+AddOp		: '+' | '-' {};
+Term		: Factor {}
+			| Factor MulOp Factor {};
+MulOp		: '*' | '/' | '%' {};
+Factor		: UnaryOp Primary {}
+			| Primary {};
+UnaryOp		: '-' | '!' {};
+Primary 	: IDENTIFIER '[' Expression ']' {}
+			| Literal
+			| '(' Expression ')'
+			| Type '(' Expression ')';
+Literal		: INTEGER | FLOAT | CHAR | Boolean {};
+Boolean 	: RESV_TRUE | RESV_FALSE {};
 
-program:  INT_KEYWORD MAIN_KEYWORD '(' ')' '{' Declarations Statements '}' { outfile << "Program encountered" << endl; }
-	 ;
+%%
 
-Declarations:
-	     | Declarations Declaration
-	     ;
-
-Declaration:  Type IDENTIFIER ';'  { outfile << "Id=" << $2 << endl;}
-	      | Type IDENTIFIER '[' INT ']' ';' { outfile << "Id=" << $2 << endl ;
-					      outfile << "Size=" << $4   << endl;}
-	      ;
-
-Type: INT_KEYWORD { outfile << "Int declaration encountered" << endl; }
-      | BOOL { outfile << "Boolean declaration encountered" << endl;}
-	;
-
-Statements:
-	    | Statements statement
-	    ;
-
-statement:
-	    Assignment
-	    | ';'
-	    ;
-
-Assignment: IDENTIFIER '=' Expression ';' { outfile << "Assignment operation encountered" << endl; }
-	    | IDENTIFIER '[' Expression ']' '=' Expression ';' { outfile << "Assignment operation encountered" << endl; }
-	    ;
-
-Expression: Term Third
-	    ;
-Third:
-	| Third '+' Term {  outfile << "Addition expression encountered" << endl; }
-	| Third '-' Term  {  outfile << "Subtraction expression encountered" << endl; }
-	;
-
-Term: Factor Second
-	;
-
-Second:
-	| Second '*' Factor {outfile << "Multiplication expression encountered" << endl; }
-	| Second '/' Factor {outfile << "Division expression encountered" << endl; }
-	| Second '%' Factor  {outfile << "Modulus expression encountered" << endl; }
-	;
-
-
-
-Factor:  IDENTIFIER '[' Expression ']'
-	| IDENTIFIER
-	| Literal
-	| '(' Expression ')'
-	;
-
-Literal: INT { outfile << "Integer literal encountered" << endl;
-		outfile << "Value=" << $1 << endl; }
-	| Boolean
-	;
-Boolean: TRUE { outfile << "Boolean literal encountered" << endl;
-		outfile << "Value=true" << endl; }
-	| FALSE { outfile << "Boolean literal encountered" << endl;
-		outfile << "Value=false" << endl; }
-	;
-
-//my code
-
-If statement:  if(Expression) statement[else statement]
-  ;
-
-While statement: while (Expression) statement
-  ;
-
-conjunction: Equality {&& Equality }
-	;
-
-Equality: Relation [EquOp Relation]
-	;
-
-
-
-
-EquOp:
-	;
-
-
-
-
-relation: Addition [RelOp Addition]
-  ;
-
-Addition: Term {AddOp Term}
-	;
-
-UnaryOp:
-  ;
-
-Primary: Identifier [[Expression]]
-  | Literal
-  | (Expression)
-  | Type (Expression)
-  ;
-
-float: Integer. Integer
-	;
-
-Char: 
-	;
-
-
-
-  %%
-
-
-
-
-
-int main(int, char**) {
-	FILE *myfile = fopen("test_input.txt", "r");
-	// Input file
-	if (!myfile) {
-		cout <<"Input file not found!" << endl;
-		return -1;
-	}
-	// output file bison_output.txt
-	outfile.open("bison_output.txt");
-
-	// set flex to read from it instead of defaulting to STDIN:
-	yyin = myfile;
-
-	// parse through the input until there is no more:
-	do {
-		yyparse();
-	} while (!feof(yyin));
-
-	// close output file
-	outfile.close();
-	cout << "Successful parse" << endl;
+int main(void) {
+	yyparse();
+	return 0;
 }
 
 void yyerror(const char *s) {
-	// Some Invalid syntax
-	cout << "Invalid Program" << endl;
+	fprintf(stderr, "%s\n", s);
 	exit(-1);
 }
