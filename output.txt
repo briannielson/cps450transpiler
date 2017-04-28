@@ -3,8 +3,8 @@ Lex: Inline comment:  // /* not a multiline comment */
 Lex: Multiline comment:  /*
 Lex: Keyword:  int
 Lex: Keyword:  main
-Lex: Open paranthesis (
-Lex: Close paranthesis )
+Lex: Open parenthesis (
+Lex: Close parenthesis )
 Lex: Open bracket {
 Lex: Keyword:  int
 type: int
@@ -46,12 +46,12 @@ Lex: Semicolon ;
 identifier: flt0
 Assignment found
 Lex: Keyword:  if
-Lex: Open paranthesis (
+Lex: Open parenthesis (
 Lex: Identifier:  int0
 Lex: Comparison:  <=
 Identifier int0
 Lex: Identifier:  int1
-Lex: Close paranthesis )
+Lex: Close parenthesis )
 Identifier int1
 Relation
 Lex: Open bracket {
@@ -74,12 +74,13 @@ Lex: Close bracket }
 No more statements...
 found statement block
 Code block found
-Lex: Close bracket }
 If statement
 If statement found
+Lex: Close bracket }
 No more statements...
 found statement block
 found statement block
 found statement block
 found statement block
 Found program
+Lex: Multiline comment:  /*

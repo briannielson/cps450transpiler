@@ -947,12 +947,12 @@ YY_RULE_SETUP
 case 24:
 YY_RULE_SETUP
 #line 71 "tran.l"
-{ print("Open paranthesis", yytext); return yytext[0]; }
+{ print("Open parenthesis", yytext); return LPARAN; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 72 "tran.l"
-{ print("Close paranthesis", yytext); return yytext[0]; }
+{ print("Close parenthesis", yytext); return RPARAN; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP

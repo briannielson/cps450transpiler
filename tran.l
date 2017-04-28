@@ -68,8 +68,8 @@ void print(char *s, char *q);
 
 [>|<] { printcmp(); return yytext[0]; }
 
-"(" { print("Open paranthesis", yytext); return yytext[0]; }
-")" { print("Close paranthesis", yytext); return yytext[0]; }
+"(" { print("Open parenthesis", yytext); return LPARAN; }
+")" { print("Close parenthesis", yytext); return RPARAN; }
 "{" { print("Open bracket", yytext); return yytext[0]; }
 "}" { print("Close bracket", yytext); return yytext[0]; }
 ";" { print("Semicolon", yytext); return EOL; }

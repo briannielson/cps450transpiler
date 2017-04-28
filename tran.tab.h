@@ -49,23 +49,26 @@ extern int yydebug;
     CMP_NOTEQUAL = 259,
     CMP_GREQ = 260,
     CMP_LTEQ = 261,
-    RESV_IF = 262,
-    RESV_WHILE = 263,
-    RESV_TRUE = 264,
-    RESV_FALSE = 265,
-    RESV_MAIN = 266,
-    TYPE_BOOL = 267,
-    TYPE_CHAR = 268,
-    TYPE_FLOAT = 269,
-    TYPE_INT = 270,
-    LOG_AND = 271,
-    LOG_OR = 272,
-    INTEGER = 273,
-    IDENTIFIER = 274,
-    CHAR = 275,
-    FLOAT = 276,
-    EOL = 277,
-    RESV_ELSE = 278
+    UMINUS = 262,
+    RESV_IF = 263,
+    RESV_WHILE = 264,
+    RESV_TRUE = 265,
+    RESV_FALSE = 266,
+    RESV_MAIN = 267,
+    LPARAN = 268,
+    TYPE_BOOL = 269,
+    TYPE_CHAR = 270,
+    TYPE_FLOAT = 271,
+    TYPE_INT = 272,
+    LOG_AND = 273,
+    LOG_OR = 274,
+    INTEGER = 275,
+    IDENTIFIER = 276,
+    CHAR = 277,
+    FLOAT = 278,
+    EOL = 279,
+    RESV_ELSE = 280,
+    RPARAN = 281
   };
 #endif
 
@@ -74,14 +77,14 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 27 "tran.y" /* yacc.c:1909  */
+#line 28 "tran.y" /* yacc.c:1909  */
 
    int ival;
    float fval;
    char *sval;
    char cval;
 
-#line 85 "tran.tab.h" /* yacc.c:1909  */
+#line 88 "tran.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

@@ -18,6 +18,7 @@ extern FILE *yyin;
 %left '+' '-'
 %left '*' '/' '%'
 %left CMP_EQUAL CMP_NOTEQUAL CMP_GREQ CMP_LTEQ '>' '<'
+%left UMINUS
 
 %token RESV_IF RESV_WHILE RESV_TRUE RESV_FALSE RESV_MAIN
 %token TYPE_BOOL TYPE_CHAR TYPE_FLOAT TYPE_INT
@@ -38,10 +39,11 @@ extern FILE *yyin;
 
 %nonassoc EOL
 %nonassoc RESV_ELSE
+%nonassoc DANGLESOLVE
 
 %%
 
-Program  	: TYPE_INT RESV_MAIN '(' ')' '{' Declarations Statements '}' { dprintf(outfile, "Found program\n"); exit(0); }
+Program  	: TYPE_INT RESV_MAIN '(' ')' '{' Declarations Statements '}' { dprintf(outfile, "Found program\n"); }
 
 Declarations: Declaration Declarations { dprintf(outfile, "Found Declaration...\n"); }
 			| ;
@@ -72,7 +74,7 @@ Assignment	: IDENTIFIER '=' Expression EOL { dprintf(outfile, "identifier: %s\n"
 				dprintf(outfile, "identifier: %s\n", $1); 
 			}
 
-Ifstate		: RESV_IF '(' Expression ')' Statement { dprintf(outfile, "If statement\n"); } 
+Ifstate		: RESV_IF '(' Expression ')' Statement %prec DANGLESOLVE { dprintf(outfile, "If statement\n"); } 
 			| RESV_IF '(' Expression ')' Statement RESV_ELSE Statement { dprintf(outfile, "If else statement\n"); }
 
 Whilestate	: RESV_WHILE '(' Expression ')' Statement { dprintf(outfile, "While statement\n"); }
@@ -106,7 +108,7 @@ MulOp		: '*' | '/' | '%' {}
 Factor		: Primary {}
 			| UnaryOp Primary { dprintf(outfile, "Unary Op found\n"); }
 
-UnaryOp		: '-' | '!' {}
+UnaryOp		: '-' %prec UMINUS | '!' {}
 
 Primary 	: IDENTIFIER { dprintf(outfile, "Identifier %s\n", $1); }
 			| IDENTIFIER '[' Expression ']' { dprintf(outfile, "Array %s\n", $1); }
