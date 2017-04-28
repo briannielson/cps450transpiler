@@ -1,0 +1,11 @@
+Lex: Inline comment:  // /* not a multiline comment */
+
+Lex: Multiline comment:  /*
+Lex: Keyword:  int
+Lex: Keyword:  main
+Lex: Open paranthesis (
+Lex: Close paranthesis )
+Lex: Open bracket {
+Lex: Keyword:  int
+type: intLex: Identifier:  int0
+Lex: AssignmentOp =
